@@ -62,15 +62,17 @@ namespace Samples.Net40
                 Stream stream = httpWebRequest.GetRequestStream();
                 stream.Write(data, 0, data.Length);
                 stream.Close();
-                HttpWebResponse httpWebResponse = httpWebRequest.GetResponse() as HttpWebResponse;
-                Stream responseStream = httpWebResponse.GetResponseStream();
-                StreamReader streamReader = new StreamReader(responseStream);
+                using(HttpWebResponse httpWebResponse = httpWebRequest.GetResponse() as HttpWebResponse) {
+                using(Stream responseStream = httpWebResponse.GetResponseStream()) {
+                using(StreamReader streamReader = new StreamReader(responseStream)) {
                 string result = streamReader.ReadToEnd();
                 streamReader.Close();
+                }
                 responseStream.Close();
+                }
                 httpWebRequest.Abort();
                 httpWebResponse.Close();
-
+                }
                 //
                 // Sample response
                 // ----------------------------------------------------
